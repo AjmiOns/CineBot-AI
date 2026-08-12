@@ -3,6 +3,7 @@
 # ─────────────────────────────────────────────────────────────
 # Movie Recommender (Hybrid + Personalized)
 # ─────────────────────────────────────────────────────────────
+
 class MovieRecommender:
     def __init__(self, hybrid_retriever, preference_engine):
         # Retriever hybride (RAG : dense + sparse)

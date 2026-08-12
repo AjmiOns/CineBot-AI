@@ -4,6 +4,7 @@ from langchain_community.vectorstores import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
 import numpy as np
 
+
 class HybridRetriever:
     
     def __init__(self, vectorstore, documents, top_k=5):

@@ -7,6 +7,7 @@ import json
 # ─────────────────────────────────────────────────────────────
 # Permet de détecter automatiquement le genre préféré
 # à partir du texte de l'utilisateur
+
 GENRE_KEYWORDS = {
     "action": ["action", "fight", "explosion", "thriller", "chase"],
     "romance": ["love", "romance", "romantic", "relationship"],
