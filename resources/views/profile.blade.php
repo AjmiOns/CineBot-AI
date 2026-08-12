@@ -65,6 +65,7 @@ a{color:var(--accent);text-decoration:none}
 ::-webkit-scrollbar{width:4px}
 ::-webkit-scrollbar-thumb{background:var(--border-glow);border-radius:99px}
 
+
 /* ── Navbar (identique à la page chatbot) ── */
 .navbar{
   height:58px;
