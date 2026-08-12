@@ -10,6 +10,7 @@
 # (voir .env.example) — ce compose ne fournit PAS les clés Groq/TMDB à ta
 # place, seulement la connectivité réseau entre les conteneurs.
 
+
 services:
   mysql:
     image: mysql:8.0
