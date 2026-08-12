@@ -3,6 +3,7 @@
 Moteur de ranking hybride — CineBot AI
 =======================================
 
+
 Combine plusieurs signaux en un seul score composite, plutôt que de
 laisser le LLM décider seul de l'ordre des recommandations :
 
@@ -24,6 +25,7 @@ Pipeline complet :
 from __future__ import annotations
 
 import math
+
 from typing import List, Dict, Optional
 
 from tmdb_service import GENRE_IDS
