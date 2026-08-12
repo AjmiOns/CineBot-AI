@@ -1,0 +1,74 @@
+# docker-compose.yml — CineBot AI
+#
+# Lance les 3 services du projet en une seule commande :
+#   docker compose up --build
+#
+# Laravel : http://localhost:8000
+# Service IA (Swagger) : http://localhost:8001/docs
+#
+# Prérequis : un fichier `.env` (racine) et `ai-service/.env` déjà remplis
+# (voir .env.example) — ce compose ne fournit PAS les clés Groq/TMDB à ta
+# place, seulement la connectivité réseau entre les conteneurs.
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: cinebot-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: movie_chatbot_db
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: cinebot
+      MYSQL_PASSWORD: cinebot
+    ports:
+      - "3307:3306"   # 3307 côté hôte pour ne pas entrer en conflit avec XAMPP (3306)
+    volumes:
+      - cinebot_mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  ai-service:
+    build: ./ai-service
+    container_name: cinebot-ai-service
+    restart: unless-stopped
+    env_file:
+      - ./ai-service/.env
+    ports:
+      - "8001:8001"
+    volumes:
+      # Persiste l'index FAISS entre redémarrages — évite de le reconstruire
+      # (plusieurs minutes) à chaque `docker compose up`.
+      - cinebot_faiss_index:/app/faiss_movie_index
+
+  laravel:
+    build: .
+    container_name: cinebot-laravel
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+      ai-service:
+        condition: service_started
+    env_file:
+      - .env
+    environment:
+      # Ces valeurs écrasent volontairement celles du .env local (qui pointent
+      # vers 127.0.0.1/XAMPP) pour utiliser les noms de service Docker.
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: movie_chatbot_db
+      DB_USERNAME: cinebot
+      DB_PASSWORD: cinebot
+      AI_API_URL: http://ai-service:8001
+      SESSION_DRIVER: file
+      CACHE_STORE: file
+    ports:
+      - "8000:8000"
+
+volumes:
+  cinebot_mysql_data:
+  cinebot_faiss_index:
