@@ -1,0 +1,22 @@
+# ai-service/requirements.txt
+# Généré à partir des imports réellement utilisés par main.py et ses
+# dépendances actives (rag_engine, ranking, groq_service, tmdb_service,
+# memory, embedding).
+
+# ── Serveur API ──────────────────────────────────────────────────────────
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+pydantic==2.10.4
+python-dotenv==1.0.1
+
+# ── HTTP / données externes (Groq, TMDB) ─────────────────────────────────
+requests==2.32.3
+
+# ── Pipeline RAG hybride (FAISS + BM25) ──────────────────────────────────
+numpy==1.26.4
+rank-bm25==0.2.2
+faiss-cpu==1.9.0
+sentence-transformers==3.3.1
+langchain-core==0.3.29
+langchain-community==0.3.14
+langchain-huggingface==0.1.2
