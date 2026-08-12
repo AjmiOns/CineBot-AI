@@ -22,7 +22,7 @@ class UserPreference extends Model
      * Ex: UserPreference::bump($userId, 'genre', 'Science-Fiction', +2);
      *
      * Le score ne descend jamais en dessous de 0 : une préférence "oubliée"
-     * disparaît progressivement du classement plutôt que de devenir négative.
+     * disparaît progressivement du classement plutôt que de devenir négative..
      */
     public static function bump(?int $userId, string $key, ?string $value, int $delta = 1): void
     {
