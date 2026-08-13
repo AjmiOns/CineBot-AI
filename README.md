@@ -36,6 +36,23 @@ Projet de stage d'été — 1ère année Cycle Ingénieur, TEK-UP University.
 
 CineBot AI est un chatbot cinéma full-stack qui ne se contente pas d'interroger un LLM : chaque réponse est **ancrée** dans des données réelles (TMDB) via un pipeline de retrieval hybride, puis **re-classée** par un moteur de ranking qui tient compte des goûts appris de chaque utilisateur, avant que Groq ne rédige l'explication finale.
 
+<p align="center">
+  <img src="docs/screenshots/login.png" alt="Login page" width="410">
+  <img src="docs/screenshots/register.png" alt="Register page" width="410">
+</p>
+
+<p align="center">
+  <img src="docs/screenshots/chat.png" alt="Main chat interface with match-score badges" width="850">
+</p>
+
+<p align="center">
+  <img src="docs/screenshots/dashboard1.png" alt="Admin dashboard with Chart.js" width="850">
+  <img src="docs/screenshots/dashboard2.png" alt="Admin dashboard with Chart.js" width="850">
+</p>
+
+<p align="center">
+  <img src="docs/screenshots/profile.png" alt="User profile — favorites and learned preferences" width="850">
+</p>
 ```
 "Recommande-moi un bon film de science-fiction"
         │

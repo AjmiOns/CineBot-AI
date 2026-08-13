@@ -285,7 +285,7 @@ input.invalid{border-color:#ff6b6f}
       </div>
     </div>
 
-    <div class="brand-panel-bottom">© 2026 CineBot AI — Ons Ajmi</div>
+    <div class="brand-panel-bottom">© 2026 CineBot AI </div>
   </aside>
 
   <!-- ── Form panel ── -->
