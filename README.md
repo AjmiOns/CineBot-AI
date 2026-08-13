@@ -9,6 +9,7 @@ Projet de stage d'été — 1ère année Cycle Ingénieur, TEK-UP University.
 ## Sommaire
 
 - [Aperçu](#aperçu)
+- [Screenshots](#screenshots)
 - [Fonctionnalités](#fonctionnalités)
 - [Architecture](#architecture)
 - [Stack technique](#stack-technique)
@@ -36,23 +37,47 @@ Projet de stage d'été — 1ère année Cycle Ingénieur, TEK-UP University.
 
 CineBot AI est un chatbot cinéma full-stack qui ne se contente pas d'interroger un LLM : chaque réponse est **ancrée** dans des données réelles (TMDB) via un pipeline de retrieval hybride, puis **re-classée** par un moteur de ranking qui tient compte des goûts appris de chaque utilisateur, avant que Groq ne rédige l'explication finale.
 
-<p align="center">
-  <img src="docs/screenshots/login.png" alt="Login page" width="410">
-  <img src="docs/screenshots/register.png" alt="Register page" width="410">
-</p>
+## Screenshots
 
-<p align="center">
-  <img src="docs/screenshots/chat.png" alt="Main chat interface with match-score badges" width="850">
-</p>
+<table>
+<tr>
+<td width="50%"><img src="docs/screenshots/login.png" alt="Login page"></td>
+<td width="50%"><img src="docs/screenshots/register.png" alt="Register page"></td>
+</tr>
+<tr>
+<td align="center"><sub><b>Login</b> — split-screen layout with branded panel</sub></td>
+<td align="center"><sub><b>Register</b> — matching onboarding experience</sub></td>
+</tr>
+</table>
 
-<p align="center">
-  <img src="docs/screenshots/dashboard1.png" alt="Admin dashboard with Chart.js" width="850">
-  <img src="docs/screenshots/dashboard2.png" alt="Admin dashboard with Chart.js" width="850">
-</p>
+<table>
+<tr>
+<td><img src="docs/screenshots/chat.png" alt="Main chat interface"></td>
+</tr>
+<tr>
+<td align="center"><sub><b>Main chat interface</b> — hybrid RAG recommendations with visible match-score badges and conversation history</sub></td>
+</tr>
+</table>
 
-<p align="center">
-  <img src="docs/screenshots/profile.png" alt="User profile — favorites and learned preferences" width="850">
-</p>
+<table>
+<tr>
+<td width="50%"><img src="docs/screenshots/dashboard1.png" alt="Admin dashboard — activity"></td>
+<td width="50%"><img src="docs/screenshots/dashboard2.png" alt="Admin dashboard — feedback"></td>
+</tr>
+<tr>
+<td align="center"><sub><b>Admin dashboard</b> — usage activity (Chart.js)</sub></td>
+<td align="center"><sub><b>Admin dashboard</b> — feedback breakdown & top content</sub></td>
+</tr>
+</table>
+
+<table>
+<tr>
+<td><img src="docs/screenshots/profile.png" alt="User profile"></td>
+</tr>
+<tr>
+<td align="center"><sub><b>User profile</b> — favorites and learned taste preferences</sub></td>
+</tr>
+</table>
 ```
 "Recommande-moi un bon film de science-fiction"
         │
