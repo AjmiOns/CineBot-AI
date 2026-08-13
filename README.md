@@ -146,7 +146,7 @@ Le projet est composé de **deux services indépendants** qui communiquent en HT
 
 ## Structure du projet
 
-````
+```
 cinebot-ai/
 ├── app/
 │   ├── Http/
