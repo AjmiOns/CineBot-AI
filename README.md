@@ -429,6 +429,7 @@ Projet réalisé dans le cadre d'un stage d'été — 1ère année Cycle Ingéni
 ---
 
 <p align="center">
-  <strong>Ons Ajmi</strong> — étudiante en 1ère année Cycle Ingénieur, TEK-UP University<br>
-  GitHub : <a href="https://github.com/AjmiOns">AjmiOns (Ons Ajmi)</a> · LinkedIn : <a href="https://www.linkedin.com/in/ons-ajmi-0ab2982a2/">Ons Ajmi</a>
+  <strong>Ons Ajmi</strong> — Engineering Student in Cloud Infrastructure Management @ TEK-UP University<br>
+  GitHub : <a href="https://github.com/AjmiOns">AjmiOns</a> · 
+  LinkedIn : <a href="https://www.linkedin.com/in/ons-ajmi-0ab2982a2/">Ons Ajmi</a>
 </p>
