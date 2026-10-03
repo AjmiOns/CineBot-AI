@@ -1,41 +1,41 @@
 # 🎬 CineBot AI
 
-**Assistant cinématographique intelligent** combinant une architecture RAG hybride (recherche dense + sparse), un LLM (Groq / Llama 3.1) et des données TMDB en temps réel, pour offrir des recommandations de films personnalisées, expliquées et vérifiables.
+**Intelligent movie assistant** combining a hybrid RAG architecture (dense + sparse retrieval), an LLM (Groq / Llama 3.1) and real-time TMDB data, to deliver personalized, explained and verifiable movie recommendations.
 
-Projet de stage d'été — 1ère année Cycle Ingénieur, TEK-UP University.
+Summer internship project — 1st year Engineering Cycle, TEK-UP University.
 
 ----
 
-## Sommaire
+## Table of Contents
 
-- [Aperçu](#aperçu)
+- [Overview](#overview)
 - [Screenshots](#screenshots)
-- [Fonctionnalités](#fonctionnalités)
+- [Features](#features)
 - [Architecture](#architecture)
-- [Stack technique](#stack-technique)
-- [Structure du projet](#structure-du-projet)
-- [Prérequis](#prérequis)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Prerequisites](#prerequisites)
 - [Installation](#installation)
-- [Démarrage rapide avec Docker](#démarrage-rapide-avec-docker)
-- [Variables d'environnement](#variables-denvironnement)
-- [Lancer le projet](#lancer-le-projet)
-- [Schéma de base de données](#schéma-de-base-de-données)
-- [Référence API](#référence-api)
-- [Documentation interactive (Swagger)](#documentation-interactive-swagger)
-- [Cache & performance](#cache--performance)
-- [Logs & observabilité](#logs--observabilité)
-- [Tests automatisés](#tests-automatisés)
-- [Sécurité & gestion de compte](#sécurité--gestion-de-compte)
-- [Devenir administrateur](#devenir-administrateur)
-- [Feuille de route](#feuille-de-route)
-- [Contribuer](#contribuer)
-- [Licence](#licence)
+- [Quick Start with Docker](#quick-start-with-docker)
+- [Environment Variables](#environment-variables)
+- [Running the Project](#running-the-project)
+- [Database Schema](#database-schema)
+- [API Reference](#api-reference)
+- [Interactive Documentation (Swagger)](#interactive-documentation-swagger)
+- [Cache & Performance](#cache--performance)
+- [Logs & Observability](#logs--observability)
+- [Automated Tests](#automated-tests)
+- [Security & Account Management](#security--account-management)
+- [Becoming an Administrator](#becoming-an-administrator)
+- [Roadmap](#roadmap)
+- [Contributing](#contributing)
+- [License](#license)
 
 ---
 
-## Aperçu
+## Overview
 
-CineBot AI est un chatbot cinéma full-stack qui ne se contente pas d'interroger un LLM : chaque réponse est **ancrée** dans des données réelles (TMDB) via un pipeline de retrieval hybride, puis **re-classée** par un moteur de ranking qui tient compte des goûts appris de chaque utilisateur, avant que Groq ne rédige l'explication finale.
+CineBot AI is a full-stack movie chatbot that does more than just query an LLM: every answer is **grounded** in real data (TMDB) through a hybrid retrieval pipeline, then **re-ranked** by a ranking engine that takes each user's learned tastes into account, before Groq writes the final explanation.
 
 ## Screenshots
 
@@ -79,352 +79,352 @@ CineBot AI est un chatbot cinéma full-stack qui ne se contente pas d'interroger
 </tr>
 </table>
 ```
-"Recommande-moi un bon film de science-fiction"
+"Recommend me a good science-fiction movie"
         │
         ▼
 ┌───────────────────────────────────────────────────────────┐
-│  1. Retrieval hybride : FAISS (dense) + BM25 (sparse)      │
-│     fusionnés par Reciprocal Rank Fusion                    │
-│  2. Enrichissement TMDB (rating, popularité, genres, cast)  │
-│  3. Ranking hybride : pertinence + note + popularité         │
-│     + préférences apprises (like/dislike/note réels)        │
-│  4. Groq (Llama 3.1) rédige l'explication personnalisée      │
+│  1. Hybrid retrieval: FAISS (dense) + BM25 (sparse)        │
+│     merged using Reciprocal Rank Fusion                     │
+│  2. TMDB enrichment (rating, popularity, genres, cast)      │
+│  3. Hybrid ranking: relevance + rating + popularity          │
+│     + learned preferences (real likes/dislikes/ratings)     │
+│  4. Groq (Llama 3.1) writes the personalized explanation     │
 └───────────────────────────────────────────────────────────┘
         │
         ▼
-   Réponse + cartes films classées, avec 👍 👎 ⭐ pour continuer
-   à affiner le profil de l'utilisateur
+   Answer + ranked movie cards, with 👍 👎 ⭐ to keep refining
+   the user's profile
 ```
 
-## Fonctionnalités
+## Features
 
-- **Chat conversationnel** avec résolution d'anaphores ("parle-moi du premier", "même réalisateur que lui")
-- **Multi-discussions** façon Claude/ChatGPT : historique dans une barre latérale, bouton "Nouvelle discussion"
-- **Authentification complète** : inscription, connexion, déconnexion, **récupération de mot de passe**, **suppression de compte** (sessions Laravel)
-- **Profilage utilisateur réel** : genres, acteurs, réalisateurs et langues préférés, appris à partir des interactions (enrichi via l'API TMDB, pas de simple mot-clé)
-- **Feedback Learning** : 👍 / 👎 / ⭐ (1 à 5) sur chaque recommandation, qui met à jour le profil en direct
-- **Moteur de ranking hybride** combinant pertinence RAG, note TMDB, popularité et préférences apprises — avec un badge "🎯 XX% match" affiché sur chaque recommandation pour rendre le score visible, pas juste fonctionnel en coulisses
-- **Dashboard admin** : utilisateurs actifs, genres les plus appréciés, films les plus likés, usage du chatbot, statistiques de feedback, **export CSV en un clic**
-- **Sécurité applicative** : rate limiting sur les endpoints sensibles, confirmation par mot de passe pour les actions destructives, gestion RGPD des données personnelles
-- **Thème clair / sombre** synchronisé sur toutes les pages
-- **Filtrage de contenu adulte** à plusieurs niveaux (TMDB, documents RAG, prompt système)
+- **Conversational chat** with anaphora resolution ("tell me about the first one", "same director as him")
+- **Multiple conversations** Claude/ChatGPT-style: history in a sidebar, "New conversation" button
+- **Complete authentication**: registration, login, logout, **password recovery**, **account deletion** (Laravel sessions)
+- **Real user profiling**: preferred genres, actors, directors and languages, learned from interactions (enriched via the TMDB API, not simple keyword matching)
+- **Feedback Learning**: 👍 / 👎 / ⭐ (1 to 5) on every recommendation, which updates the profile in real time
+- **Hybrid ranking engine** combining RAG relevance, TMDB rating, popularity and learned preferences — with a "🎯 XX% match" badge displayed on each recommendation to make the score visible, not just functional behind the scenes
+- **Admin dashboard**: active users, most appreciated genres, most liked movies, chatbot usage, feedback statistics, **one-click CSV export**
+- **Application security**: rate limiting on sensitive endpoints, password confirmation for destructive actions, GDPR-compliant handling of personal data
+- **Light / dark theme** synchronized across all pages
+- **Multi-level adult content filtering** (TMDB, RAG documents, system prompt)
 
 ## Architecture
 
-Le projet est composé de **deux services indépendants** qui communiquent en HTTP :
+The project is made up of **two independent services** that communicate over HTTP:
 
 ```
 ┌───────────────┐      HTTP/JSON       ┌────────────────────┐      HTTP      ┌──────────┐
-│   Frontend     │ ───────────────────▶ │   Backend Laravel   │ ─────────────▶ │ Groq API  │
+│   Frontend     │ ───────────────────▶ │   Laravel Backend   │ ─────────────▶ │ Groq API  │
 │  Blade + JS    │ ◀─────────────────── │   (PHP / MySQL)      │                └──────────┘
 └───────────────┘                      └──────────┬──────────┘
                                                    │ HTTP/JSON
                                                    ▼
                                         ┌─────────────────────┐      HTTP      ┌──────────┐
-                                        │  Service IA Python    │ ─────────────▶ │ TMDB API  │
+                                        │  Python AI Service    │ ─────────────▶ │ TMDB API  │
                                         │  FastAPI + FAISS      │                └──────────┘
                                         └─────────────────────┘
 ```
 
-- **Laravel** gère l'authentification, la persistance (historique, favoris, préférences), et fait office de proxy sécurisé vers le service Python (aucune clé API n'est jamais exposée au navigateur).
-- **FastAPI** gère le pipeline RAG (FAISS + BM25), le ranking hybride, et l'appel à Groq.
-- Les deux services communiquent uniquement via `AI_API_URL` — ils peuvent être déployés séparément.
+- **Laravel** handles authentication, persistence (history, favorites, preferences), and acts as a secure proxy to the Python service (no API key is ever exposed to the browser).
+- **FastAPI** handles the RAG pipeline (FAISS + BM25), the hybrid ranking, and the call to Groq.
+- The two services communicate only through `AI_API_URL` — they can be deployed separately.
 
-## Stack technique
+## Tech Stack
 
-| Couche | Technologie |
+| Layer | Technology |
 |---|---|
-| Frontend | Blade (PHP templating), JavaScript vanilla, CSS custom |
-| Backend applicatif | Laravel 12 (PHP 8.2+), MySQL |
-| Service IA | FastAPI (Python), Uvicorn |
-| Recherche vectorielle | FAISS + `sentence-transformers/all-MiniLM-L6-v2` |
-| Recherche lexicale | BM25 (`rank_bm25`) |
+| Frontend | Blade (PHP templating), vanilla JavaScript, custom CSS |
+| Application backend | Laravel 12 (PHP 8.2+), MySQL |
+| AI service | FastAPI (Python), Uvicorn |
+| Vector search | FAISS + `sentence-transformers/all-MiniLM-L6-v2` |
+| Lexical search | BM25 (`rank_bm25`) |
 | LLM | Groq API — `llama-3.1-8b-instant` |
-| Données films | TMDB API |
-| Environnement local | XAMPP (Apache/MySQL) |
-| Conteneurisation | Docker Compose (Laravel + MySQL + service IA) |
+| Movie data | TMDB API |
+| Local environment | XAMPP (Apache/MySQL) |
+| Containerization | Docker Compose (Laravel + MySQL + AI service) |
 
-## Structure du projet
+## Project Structure
 
 ```
 cinebot-ai/
 ├── app/
 │   ├── Http/
 │   │   ├── Controllers/
-│   │   │   ├── Auth/AuthController.php        # inscription / connexion / déconnexion
+│   │   │   ├── Auth/AuthController.php        # registration / login / logout
 │   │   │   ├── Admin/AdminDashboardController.php
-│   │   │   ├── CinebotController.php          # proxy vers le service IA, historique
-│   │   │   └── MovieFeedbackController.php    # like/dislike/note, favoris, préférences
+│   │   │   ├── CinebotController.php          # proxy to the AI service, history
+│   │   │   └── MovieFeedbackController.php    # like/dislike/rating, favorites, preferences
 │   │   └── Middleware/EnsureIsAdmin.php
 │   ├── Models/
 │   │   ├── User.php
 │   │   ├── ChatHistory.php
-│   │   ├── UserPreference.php                 # profil appris (bump/topFor)
+│   │   ├── UserPreference.php                 # learned profile (bump/topFor)
 │   │   └── MovieInteraction.php
-│   └── Services/TmdbClient.php                # enrichissement TMDB côté Laravel
+│   └── Services/TmdbClient.php                # TMDB enrichment on the Laravel side
 ├── database/migrations/
 ├── resources/views/
 │   ├── auth/{login,register,forgot-password,reset-password}.blade.php
 │   ├── admin/dashboard.blade.php
-│   ├── chatbot.blade.php                      # interface principale
-│   └── profile.blade.php                      # favoris, préférences, suppression de compte
+│   ├── chatbot.blade.php                      # main interface
+│   └── profile.blade.php                      # favorites, preferences, account deletion
 ├── routes/{web.php,api.php}
-├── docker/entrypoint.sh                       # attend MySQL, migre, démarre Laravel
-├── Dockerfile                                  # image Laravel (PHP 8.2 + artisan serve)
-├── docker-compose.yml                          # orchestre Laravel + MySQL + service IA
-├── ai-service/                                # service Python indépendant
-│   ├── main.py            # endpoints FastAPI (/chat, /recommendations, /trending)
-│   ├── rag_engine.py      # ingestion TMDB, index FAISS + BM25, retrieval hybride
-│   ├── ranking.py          # moteur de ranking hybride (relevance + rating + pop + prefs)
-│   ├── groq_service.py     # prompt engineering + appel Groq
-│   ├── tmdb_service.py     # recherche TMDB temps réel
-│   ├── memory.py           # mémoire conversationnelle par session
-│   ├── requirements.txt    # dépendances Python figées
-│   ├── Dockerfile          # image service IA (Python 3.11 + FAISS)
-│   └── faiss_movie_index/  # index vectoriel persistant (généré, non versionné)
+├── docker/entrypoint.sh                       # waits for MySQL, migrates, starts Laravel
+├── Dockerfile                                  # Laravel image (PHP 8.2 + artisan serve)
+├── docker-compose.yml                          # orchestrates Laravel + MySQL + AI service
+├── ai-service/                                # independent Python service
+│   ├── main.py            # FastAPI endpoints (/chat, /recommendations, /trending)
+│   ├── rag_engine.py      # TMDB ingestion, FAISS + BM25 index, hybrid retrieval
+│   ├── ranking.py          # hybrid ranking engine (relevance + rating + pop + prefs)
+│   ├── groq_service.py     # prompt engineering + Groq call
+│   ├── tmdb_service.py     # real-time TMDB search
+│   ├── memory.py           # per-session conversational memory
+│   ├── requirements.txt    # pinned Python dependencies
+│   ├── Dockerfile          # AI service image (Python 3.11 + FAISS)
+│   └── faiss_movie_index/  # persistent vector index (generated, not versioned)
 └── .env / .env.example
 ```
 
-## Prérequis
+## Prerequisites
 
 - PHP ≥ 8.2, Composer
-- MySQL ≥ 8.0 (ou MariaDB équivalent)
+- MySQL ≥ 8.0 (or equivalent MariaDB)
 - Python ≥ 3.10, pip
-- Une clé [Groq API](https://console.groq.com) (gratuite)
-- Une clé [TMDB API](https://www.themoviedb.org/settings/api) (gratuite)
+- A [Groq API](https://console.groq.com) key (free)
+- A [TMDB API](https://www.themoviedb.org/settings/api) key (free)
 
 ## Installation
 
-### 1. Cloner le dépôt
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/AjmiOns/CineBot-AI.git
 cd CineBot-AI
 ```
 
-### 2. Backend Laravel
+### 2. Laravel backend
 
 ```bash
 composer install
-copy .env.example .env        # cp .env.example .env sous Linux/Mac
+copy .env.example .env        # cp .env.example .env on Linux/Mac
 php artisan key:generate
 ```
 
-Configurer `DB_*` dans `.env` puis :
+Configure `DB_*` in `.env`, then:
 
 ```bash
 php artisan migrate
 ```
 
-### 3. Service IA (Python)
+### 3. AI service (Python)
 
 ```bash
 cd ai-service
 python -m venv venv
-venv\Scripts\activate          # source venv/bin/activate sous Linux/Mac
+venv\Scripts\activate          # source venv/bin/activate on Linux/Mac
 pip install -r requirements.txt
 ```
 
-## Démarrage rapide avec Docker
+## Quick Start with Docker
 
-Alternative à l'installation manuelle ci-dessus : les 3 services (Laravel, MySQL, service IA) démarrent en une seule commande, avec les bonnes versions et sans dépendre de la configuration de la machine locale (XAMPP, versions PHP/Python, etc.).
+An alternative to the manual installation above: the 3 services (Laravel, MySQL, AI service) start with a single command, with the right versions and without depending on the local machine's configuration (XAMPP, PHP/Python versions, etc.).
 
-**Prérequis** :
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/) installé et lancé (sur Windows, nécessite WSL 2 — `wsl --install` puis redémarrage si ce n'est pas déjà activé)
-- `.env` (racine) et `ai-service/.env` déjà remplis avec tes clés (voir [Variables d'environnement](#variables-denvironnement)) — Docker Compose ne les génère pas à ta place
+**Prerequisites**:
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and running (on Windows, requires WSL 2 — `wsl --install` then restart if it is not already enabled)
+- `.env` (root) and `ai-service/.env` already filled in with your keys (see [Environment Variables](#environment-variables)) — Docker Compose does not generate them for you
 
 ```bash
 docker compose up --build
 ```
 
-Le tout premier lancement est long (5-15 min selon la connexion) : téléchargement des images de base, installation des dépendances PHP/Python, et téléchargement du modèle d'embedding HuggingFace. Les lancements suivants sont bien plus rapides grâce au cache Docker.
+The very first launch is slow (5-15 min depending on your connection): downloading base images, installing PHP/Python dependencies, and downloading the HuggingFace embedding model. Subsequent launches are much faster thanks to the Docker cache.
 
 | Service | URL |
 |---|---|
-| Application Laravel | `http://localhost:8000` |
-| Service IA (Swagger) | `http://localhost:8001/docs` |
-| MySQL (côté hôte, si besoin d'un accès direct) | `localhost:3307` *(3307 pour ne pas entrer en conflit avec un MySQL local déjà sur 3306, ex. XAMPP)* |
+| Laravel application | `http://localhost:8000` |
+| AI service (Swagger) | `http://localhost:8001/docs` |
+| MySQL (host side, if direct access is needed) | `localhost:3307` *(3307 to avoid conflicting with a local MySQL already on 3306, e.g. XAMPP)* |
 
-Ce que fait `docker compose up` automatiquement :
-- Construit l'image Laravel (PHP 8.2 + extensions) et l'image du service IA (Python 3.11 + FAISS/sentence-transformers)
-- Attend que MySQL soit prêt (`healthcheck`) avant de démarrer Laravel
-- Applique les migrations (`php artisan migrate --force`) au démarrage du conteneur Laravel
-- Persiste la base MySQL et l'index FAISS dans des volumes Docker nommés, pour ne pas tout reconstruire à chaque redémarrage
+What `docker compose up` does automatically:
+- Builds the Laravel image (PHP 8.2 + extensions) and the AI service image (Python 3.11 + FAISS/sentence-transformers)
+- Waits for MySQL to be ready (`healthcheck`) before starting Laravel
+- Applies migrations (`php artisan migrate --force`) when the Laravel container starts
+- Persists the MySQL database and the FAISS index in named Docker volumes, so nothing has to be rebuilt on every restart
 
-⚠️ **Base de données isolée** — le conteneur MySQL démarre avec une base **vide et totalement séparée** de celle utilisée en local (XAMPP). Les comptes utilisateurs créés dans un environnement n'existent pas dans l'autre : il faut recréer un compte via `/register` (ou réimporter un dump SQL) après le premier `docker compose up`.
+⚠️ **Isolated database** — the MySQL container starts with an **empty database, completely separate** from the one used locally (XAMPP). User accounts created in one environment do not exist in the other: you need to recreate an account via `/register` (or reimport an SQL dump) after the first `docker compose up`.
 
-Pour arrêter :
+To stop:
 ```bash
 docker compose down
 ```
 
-Pour repartir de zéro (supprime aussi les volumes — base de données et index FAISS) :
+To start from scratch (also deletes the volumes — database and FAISS index):
 ```bash
 docker compose down -v
 ```
 
-## Variables d'environnement
+## Environment Variables
 
-**`.env` (Laravel, à la racine)**
+**`.env` (Laravel, at the root)**
 
 | Variable | Description |
 |---|---|
-| `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD` | Connexion MySQL |
-| `AI_API_URL` | URL du service Python (ex. `http://127.0.0.1:8001`) |
-| `TMDB_API_KEY` | Utilisée pour l'enrichissement du profil (genres/acteurs/réalisateurs) |
+| `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD` | MySQL connection |
+| `AI_API_URL` | URL of the Python service (e.g. `http://127.0.0.1:8001`) |
+| `TMDB_API_KEY` | Used for profile enrichment (genres/actors/directors) |
 
 **`ai-service/.env`**
 
 | Variable | Description |
 |---|---|
-| `GROQ_API_KEY` | Clé de l'API Groq |
-| `TMDB_API_KEY` | Clé TMDB (recherche temps réel + construction de l'index RAG) |
+| `GROQ_API_KEY` | Groq API key |
+| `TMDB_API_KEY` | TMDB key (real-time search + RAG index construction) |
 
-## Lancer le projet
+## Running the Project
 
-Deux processus doivent tourner en parallèle, dans deux terminaux séparés :
+Two processes must run in parallel, in two separate terminals:
 
 ```bash
-# Terminal 1 — backend Laravel
+# Terminal 1 — Laravel backend
 php artisan serve
 
-# Terminal 2 — service IA
+# Terminal 2 — AI service
 cd ai-service
 uvicorn main:app --port 8001 --reload
 ```
 
-Au premier démarrage, `uvicorn` construit automatiquement l'index FAISS s'il est absent (peut prendre quelques minutes selon le nombre de films configuré dans `build_index()`).
+On first startup, `uvicorn` automatically builds the FAISS index if it is missing (this can take a few minutes depending on the number of movies configured in `build_index()`).
 
-Accéder ensuite à `http://localhost:8000`.
+Then go to `http://localhost:8000`.
 
-## Schéma de base de données
+## Database Schema
 
-| Table | Rôle |
+| Table | Purpose |
 |---|---|
-| `users` | Comptes utilisateurs (+ `is_admin`, `preferred_language`) |
-| `chat_histories` | Messages, groupés par `session_id` (une conversation) |
-| `user_preferences` | Profil appris : `preference_key` (genre/actor/director/language) × `preference_value` × `score` |
-| `movie_interactions` | Une ligne par (utilisateur, film) : `liked`, `rating`, `watched_at` |
+| `users` | User accounts (+ `is_admin`, `preferred_language`) |
+| `chat_histories` | Messages, grouped by `session_id` (one conversation) |
+| `user_preferences` | Learned profile: `preference_key` (genre/actor/director/language) × `preference_value` × `score` |
+| `movie_interactions` | One row per (user, movie): `liked`, `rating`, `watched_at` |
 
-## Référence API
+## API Reference
 
-Toutes les routes `/api/*` nécessitent une session authentifiée (sauf `/api/chat` et `/api/recommendations`, accessibles en invité avec des fonctionnalités réduites).
+All `/api/*` routes require an authenticated session (except `/api/chat` and `/api/recommendations`, which are accessible to guests with reduced functionality).
 
-| Méthode | Route | Description |
+| Method | Route | Description |
 |---|---|---|
-| `POST` | `/api/chat` | Envoie un message, reçoit une réponse + recommandations classées *(limité à 20 req/min)* |
-| `GET` | `/api/chat/sessions` | Liste des discussions de l'utilisateur |
-| `GET` | `/api/chat/sessions/{id}` | Messages d'une discussion précise |
-| `DELETE` | `/api/chat/sessions/{id}` | Supprime une discussion |
-| `POST` | `/api/movies/feedback` | Enregistre un like / dislike / note sur un film |
-| `GET` | `/api/user/favorites` | Films likés |
-| `GET` | `/api/user/preferences` | Profil appris (genres/acteurs/réalisateurs) |
-| `GET` | `/api/admin/stats` | Statistiques globales (admin uniquement) |
-| `GET` | `/admin/export` | Export CSV des statistiques (admin uniquement) |
+| `POST` | `/api/chat` | Sends a message, receives an answer + ranked recommendations *(limited to 20 req/min)* |
+| `GET` | `/api/chat/sessions` | List of the user's conversations |
+| `GET` | `/api/chat/sessions/{id}` | Messages of a specific conversation |
+| `DELETE` | `/api/chat/sessions/{id}` | Deletes a conversation |
+| `POST` | `/api/movies/feedback` | Records a like / dislike / rating on a movie |
+| `GET` | `/api/user/favorites` | Liked movies |
+| `GET` | `/api/user/preferences` | Learned profile (genres/actors/directors) |
+| `GET` | `/api/admin/stats` | Global statistics (admin only) |
+| `GET` | `/admin/export` | CSV export of statistics (admin only) |
 
-Routes web associées à l'authentification (hors `/api`) :
+Web routes related to authentication (outside `/api`):
 
-| Méthode | Route | Description |
+| Method | Route | Description |
 |---|---|---|
-| `GET/POST` | `/forgot-password` | Demande de réinitialisation de mot de passe *(limité à 5 req/min)* |
-| `GET/POST` | `/reset-password/{token}` | Application du nouveau mot de passe |
-| `DELETE` | `/profile` | Suppression du compte et de toutes ses données |
+| `GET/POST` | `/forgot-password` | Password reset request *(limited to 5 req/min)* |
+| `GET/POST` | `/reset-password/{token}` | Applying the new password |
+| `DELETE` | `/profile` | Deletion of the account and all its data |
 
-## Documentation interactive (Swagger)
+## Interactive Documentation (Swagger)
 
-Le service IA expose sa documentation OpenAPI générée automatiquement par FastAPI — aucune maintenance manuelle requise :
+The AI service exposes its OpenAPI documentation, automatically generated by FastAPI — no manual maintenance required:
 
-- **Swagger UI** (interactif, testable directement) : `http://127.0.0.1:8001/docs`
-- **ReDoc** (lecture) : `http://127.0.0.1:8001/redoc`
-- **Schéma OpenAPI brut** : `http://127.0.0.1:8001/openapi.json`
+- **Swagger UI** (interactive, directly testable): `http://127.0.0.1:8001/docs`
+- **ReDoc** (reading): `http://127.0.0.1:8001/redoc`
+- **Raw OpenAPI schema**: `http://127.0.0.1:8001/openapi.json`
 
-Utile pour explorer `/chat`, `/recommendations/{user_id}` et `/trending` sans passer par le frontend Laravel.
+Useful for exploring `/chat`, `/recommendations/{user_id}` and `/trending` without going through the Laravel frontend.
 
-## Cache & performance
+## Cache & Performance
 
-Deux endpoints sujets à des appels TMDB répétés sont mis en cache côté Laravel (`Cache::remember`, driver configuré via `CACHE_STORE`) :
+Two endpoints prone to repeated TMDB calls are cached on the Laravel side (`Cache::remember`, driver configured via `CACHE_STORE`):
 
-| Endpoint | Portée du cache | Durée | Justification |
+| Endpoint | Cache scope | Duration | Rationale |
 |---|---|---|---|
-| `GET /api/trending` | Globale (tous les utilisateurs) | 60 min | Contenu identique pour tout le monde, ne varie pas vite |
-| `GET /api/recommendations/{id}` | Par utilisateur + profil de goûts (clé incluant un hash des préférences) | 15 min | Personnalisé, mais doit rester frais après un nouveau like/dislike |
+| `GET /api/trending` | Global (all users) | 60 min | Same content for everyone, changes slowly |
+| `GET /api/recommendations/{id}` | Per user + taste profile (key includes a hash of the preferences) | 15 min | Personalized, but must stay fresh after a new like/dislike |
 
-Les échecs (service IA ou TMDB indisponible) ne sont **jamais** mis en cache, pour ne pas priver un utilisateur de recommandations pendant toute la durée du TTL après une panne transitoire déjà résolue.
+Failures (AI service or TMDB unavailable) are **never** cached, so that a user is not deprived of recommendations for the entire TTL after a transient outage that has already been resolved.
 
-## Logs & observabilité
+## Logs & Observability
 
-Les échecs de communication avec le service IA (FastAPI), Groq et TMDB sont écrits dans un canal dédié, séparé des logs applicatifs génériques Laravel :
+Communication failures with the AI service (FastAPI), Groq and TMDB are written to a dedicated channel, separate from Laravel's generic application logs:
 
 ```
 storage/logs/cinebot-{date}.log
 ```
 
-Configuré dans `config/logging.php` (driver `daily`, rotation sur 14 jours). Pour suivre ces logs en direct pendant une démo :
+Configured in `config/logging.php` (`daily` driver, 14-day rotation). To follow these logs live during a demo:
 
 ```bash
 tail -f storage/logs/cinebot-$(date +%Y-%m-%d).log
 ```
 
-## Tests automatisés
+## Automated Tests
 
 ```bash
 php artisan test
 ```
 
-Suite de tests Feature (PHPUnit, isolée sur SQLite en mémoire — voir `phpunit.xml`, aucune donnée de la base MySQL de développement n'est touchée) :
+Feature test suite (PHPUnit, isolated on in-memory SQLite — see `phpunit.xml`, no data from the development MySQL database is touched):
 
-| Fichier | Couvre |
+| File | Covers |
 |---|---|
-| `tests/Feature/Auth/AuthenticationTest.php` | Inscription, connexion, déconnexion, protection des routes, mot de passe oublié, suppression de compte |
-| `tests/Feature/MovieFeedbackTest.php` | Like / dislike / note, validation des entrées, upsert (pas de doublons), accès invité refusé, favoris |
+| `tests/Feature/Auth/AuthenticationTest.php` | Registration, login, logout, route protection, forgotten password, account deletion |
+| `tests/Feature/MovieFeedbackTest.php` | Like / dislike / rating, input validation, upsert (no duplicates), guest access denied, favorites |
 
-Les appels réseau vers TMDB sont interceptés (`Http::fake()`) — la suite s'exécute entièrement hors-ligne et de façon déterministe.
+Network calls to TMDB are intercepted (`Http::fake()`) — the suite runs entirely offline and deterministically.
 
-## Sécurité & gestion de compte
+## Security & Account Management
 
-Le projet applique plusieurs mesures de durcissement au-delà d'une authentification basique :
+The project applies several hardening measures beyond basic authentication:
 
-- **Récupération de mot de passe** — flux natif Laravel (`Password::sendResetLink` / `Password::reset`), token à usage unique expirant après 60 minutes. Le message renvoyé est volontairement générique ("si un compte existe...") pour ne jamais confirmer qu'une adresse email est enregistrée (protection contre l'énumération de comptes).
-- **Rate limiting** :
-  - `/api/chat` : 20 requêtes/minute par utilisateur (ou par IP pour les invités) — protège la facture Groq/TMDB et le service IA contre les abus ou boucles frontend.
-  - `/forgot-password` : 5 requêtes/minute — anti-spam sur l'envoi d'emails.
-- **Suppression de compte (droit à l'oubli)** — accessible depuis `/profile`, section "Zone dangereuse". Confirmation par mot de passe obligatoire avant suppression. La suppression est exécutée dans une transaction SQL et efface : l'historique de discussions, les préférences apprises, les interactions films (favoris/notes), puis le compte lui-même.
-- **Secrets non versionnés** — `.env`, `ai-service/.env`, ainsi que l'index FAISS généré (`ai-service/faiss_movie_index/`) sont exclus du dépôt via `.gitignore`. Les clés Groq et TMDB ne transitent jamais côté navigateur : tous les appels externes passent par le backend.
-- **CSRF** — toutes les routes `/api/*` partagent la session web (voir `bootstrap/app.php`) et valident le token CSRF, y compris pour les appels `fetch()` du frontend.
+- **Password recovery** — native Laravel flow (`Password::sendResetLink` / `Password::reset`), single-use token expiring after 60 minutes. The returned message is deliberately generic ("if an account exists...") so that it never confirms whether an email address is registered (protection against account enumeration).
+- **Rate limiting**:
+  - `/api/chat`: 20 requests/minute per user (or per IP for guests) — protects the Groq/TMDB bill and the AI service against abuse or frontend loops.
+  - `/forgot-password`: 5 requests/minute — anti-spam on email sending.
+- **Account deletion (right to be forgotten)** — accessible from `/profile`, "Danger zone" section. Password confirmation is required before deletion. The deletion is executed in an SQL transaction and erases: the conversation history, the learned preferences, the movie interactions (favorites/ratings), then the account itself.
+- **Unversioned secrets** — `.env`, `ai-service/.env`, as well as the generated FAISS index (`ai-service/faiss_movie_index/`) are excluded from the repository via `.gitignore`. The Groq and TMDB keys never reach the browser: all external calls go through the backend.
+- **CSRF** — all `/api/*` routes share the web session (see `bootstrap/app.php`) and validate the CSRF token, including for the frontend's `fetch()` calls.
 
-## Devenir administrateur
+## Becoming an Administrator
 
 ```bash
 php artisan tinker
 ```
 ```php
-User::where('email', 'votre@email.com')->update(['is_admin' => true]);
+User::where('email', 'your@email.com')->update(['is_admin' => true]);
 ```
 
-Avec Docker, exécute Tinker **à l'intérieur du conteneur** :
+With Docker, run Tinker **inside the container**:
 ```bash
 docker compose exec laravel php artisan tinker
 ```
 
-## Feuille de route
+## Roadmap
 
-- [ ] Pagination de l'historique des discussions
-- [ ] File d'attente asynchrone pour la reconstruction de l'index FAISS
-- [ ] Personnalisation du template d'email de réinitialisation (actuellement le template Laravel par défaut)
-- [ ] Vérification d'email à l'inscription
+- [ ] Pagination of the conversation history
+- [ ] Asynchronous queue for rebuilding the FAISS index
+- [ ] Customization of the reset email template (currently the default Laravel template)
+- [ ] Email verification at registration
 
-## Contribuer
+## Contributing
 
-1. Créer une branche depuis `main` : `feature/nom-fonctionnalite` ou `fix/nom-bug`
-2. Commits au format [Conventional Commits](https://www.conventionalcommits.org/) : `feat:`, `fix:`, `refactor:`, `docs:`
-3. Vérifier que les migrations et le service Python démarrent sans erreur avant de pousser
-4. Ouvrir une Pull Request vers `main` avec une description claire du changement et, si pertinent, une capture d'écran
-5. Une revue est requise avant fusion
+1. Create a branch from `main`: `feature/feature-name` or `fix/bug-name`
+2. Commits in [Conventional Commits](https://www.conventionalcommits.org/) format: `feat:`, `fix:`, `refactor:`, `docs:`
+3. Check that the migrations and the Python service start without errors before pushing
+4. Open a Pull Request to `main` with a clear description of the change and, if relevant, a screenshot
+5. A review is required before merging
 
-## Licence
+## License
 
-Projet réalisé dans le cadre d'un stage d'été — 1ère année Cycle Ingénieur, TEK-UP University.
-**Tous droits réservés** — voir le fichier [`LICENSE`](./LICENSE). Toute réutilisation du code sans autorisation écrite de l'auteure est interdite.
+Project carried out as part of a summer internship — 1st year Engineering Cycle, TEK-UP University.
+**All rights reserved** — see the [`LICENSE`](./LICENSE) file. Any reuse of the code without the author's written permission is prohibited.
 
 ---
 
